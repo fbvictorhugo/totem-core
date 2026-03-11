@@ -27,6 +27,12 @@ A ideia central é simples:
 
 ## 📱 Fluxo de Telas
 
+Inicialmente, as telas foram geradas utilizando o *Figma Make*, com base no fluxo descrito abaixo. 
+A ferramenta de IA do Figma foi utilizada para criar a prototipagem inicial e estruturar o primeiro esboço das interfaces do aplicativo.
+
+O link a seguir contém um live preview funcional, permitindo visualizar e navegar pelas telas geradas.
+- [TotemCore on Figma Make](https://www.figma.com/make/hGeaRCde7dqU4BwYlDLShN/TotemCore-by-fbvictorhugo?p=f&t=7EKOSJttadCD0zB4-0&fullscreen=1)
+
 ### 1) 📮 Tela Inicial
 
 **Objetivo:** explicar rapidamente o propósito do totem.
