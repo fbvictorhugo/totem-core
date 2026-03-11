@@ -1,6 +1,8 @@
 # TotemCore
 > Software de coleta de dados via totens digitais, configurável e multiplataforma.
-
+> 
+![GitHub License](https://img.shields.io/github/license/fbvictorhugo/totem-core)
+![KMP](https://img.shields.io/badge/framework-KMP-purple)
 
 ## Conceito do Software
 
