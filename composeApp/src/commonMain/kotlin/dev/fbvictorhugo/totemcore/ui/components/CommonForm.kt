@@ -1,7 +1,6 @@
 package dev.fbvictorhugo.totemcore.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -19,20 +18,19 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import dev.fbvictorhugo.totemcore.ui.theme.AppTheme
-import org.jetbrains.compose.resources.painterResource
-import totemcore.composeapp.generated.resources.Res
-import totemcore.composeapp.generated.resources.compose_multiplatform
 
 @Composable
 fun CommonForm(
@@ -40,91 +38,106 @@ fun CommonForm(
     title: String,
     subtitle: String,
     icon: Painter,
+    stepPage: Float = 0f,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val scrollState = rememberScrollState()
 
-    Box(
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .verticalScroll(scrollState),
-        contentAlignment = Alignment.Center
-    ) {
-        ElevatedCard(
+    ) { paddingValues ->
+        Box(
             modifier = Modifier
-                .padding(24.dp)
-                .widthIn(max = 800.dp)
-                .wrapContentHeight(),
-            shape = RoundedCornerShape(24.dp),
-            colors = CardDefaults.elevatedCardColors(
-                containerColor = MaterialTheme.colorScheme.surface
-            ),
-            elevation = CardDefaults.elevatedCardElevation(defaultElevation = 6.dp)
+                .fillMaxSize()
+                .padding(paddingValues)
+                .verticalScroll(scrollState),
+            contentAlignment = Alignment.Center
         ) {
-            Column(
+            ElevatedCard(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 48.dp, horizontal = 32.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                    .padding(24.dp)
+                    .widthIn(max = 800.dp)
+                    .wrapContentHeight(),
+                shape = RoundedCornerShape(28.dp),
+                colors = CardDefaults.elevatedCardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                ),
+                elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
             ) {
-                Box(
+                Column(
                     modifier = Modifier
-                        .size(100.dp)
-                        .background(
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = RoundedCornerShape(20.dp)
-                        ),
-                    contentAlignment = Alignment.Center
+                        .fillMaxWidth()
+                        .padding(vertical = 48.dp, horizontal = 32.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Icon(
-                        painter = icon,
-                        contentDescription = "App Logo",
-                        modifier = Modifier.size(56.dp),
-                        tint = MaterialTheme.colorScheme.onPrimary
-                    )
+
+                    FormHeader(icon, title, subtitle)
+
+                    if (stepPage > 0) {
+                        Spacer(modifier = Modifier.height(24.dp))
+                        LinearProgressIndicator(
+                            progress = { stepPage },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(10.dp)
+                                .clip(RoundedCornerShape(5.dp)),
+                            strokeCap = StrokeCap.Round,
+                            trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(40.dp))
+
+                    content()
                 }
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.headlineLarge.copy(
-                        fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = subtitle,
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    ),
-                    textAlign = TextAlign.Center
-                )
-
-                Spacer(modifier = Modifier.height(40.dp))
-
-                content()
             }
         }
     }
 }
 
-
-@Preview
 @Composable
-fun HomeScreenPreview() {
-    AppTheme {
-        CommonForm(
-            title = "Tela em Branco",
-            subtitle = "Descrição da tela em branco",
-            icon = painterResource(Res.drawable.compose_multiplatform)
-        ) {
-            Text("Conteúdo da tela em branco")
-        }
+private fun FormHeader(
+    icon: Painter,
+    title: String,
+    subtitle: String
+) {
+    Box(
+        modifier = Modifier
+            .size(100.dp)
+            .background(
+                color = MaterialTheme.colorScheme.primary,
+                shape = RoundedCornerShape(24.dp)
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            painter = icon,
+            contentDescription = null,
+            modifier = Modifier.size(56.dp),
+            tint = MaterialTheme.colorScheme.onPrimary
+        )
     }
+
+    Spacer(modifier = Modifier.height(32.dp))
+
+    Text(
+        text = title,
+        style = MaterialTheme.typography.headlineLarge.copy(
+            fontWeight = FontWeight.ExtraBold,
+            color = MaterialTheme.colorScheme.onSurface
+        ),
+        textAlign = TextAlign.Center
+    )
+
+    Spacer(modifier = Modifier.height(12.dp))
+
+    Text(
+        text = subtitle,
+        style = MaterialTheme.typography.bodyLarge.copy(
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        ),
+        textAlign = TextAlign.Center
+    )
 }
