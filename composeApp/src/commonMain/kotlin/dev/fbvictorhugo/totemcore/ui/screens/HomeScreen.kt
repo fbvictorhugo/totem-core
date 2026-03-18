@@ -1,31 +1,23 @@
 package dev.fbvictorhugo.totemcore.ui.screens
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.fbvictorhugo.totemcore.ui.components.CommonForm
+import dev.fbvictorhugo.totemcore.ui.components.FormButtons
 import dev.fbvictorhugo.totemcore.ui.theme.AppTheme
+import dev.fbvictorhugo.totemcore.ui.theme.Dimens
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import totemcore.composeapp.generated.resources.Res
@@ -38,7 +30,6 @@ import totemcore.composeapp.generated.resources.welcome_message
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
-
     CommonForm(
         modifier = modifier,
         title = stringResource(Res.string.app_name),
@@ -50,15 +41,15 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun HomeContent() {
+private fun HomeContent() {
     Surface(
         color = MaterialTheme.colorScheme.primaryContainer,
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(Dimens.MessageSurface.Radius),
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(
             text = stringResource(Res.string.welcome_message),
-            modifier = Modifier.padding(24.dp),
+            modifier = Modifier.padding(Dimens.MessageSurface.Padding),
             style = MaterialTheme.typography.bodyLarge.copy(
                 lineHeight = 26.sp,
                 color = MaterialTheme.colorScheme.onPrimaryContainer
@@ -67,40 +58,16 @@ fun HomeContent() {
         )
     }
 
-    Spacer(modifier = Modifier.height(56.dp))
+    Spacer(modifier = Modifier.height(Dimens.SpacerBetweenComponentes))
 
-    Button(
-        onClick = { /* TODO: Iniciar Cadastro */ },
-        modifier = Modifier
-            .height(60.dp)
-            .fillMaxWidth(0.8f)
-            .widthIn(min = 250.dp),
-        shape = RoundedCornerShape(12.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.secondary
-        ),
-        elevation = ButtonDefaults.buttonElevation(defaultElevation = 2.dp)
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Text(
-                text = stringResource(Res.string.start_registration),
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSecondary
-                )
-            )
+    FormButtons(
+        nextEnabled = true,
+        onBackClick = null,
+        onNextClick = { /* TODO */ },
+        nextText = stringResource(Res.string.start_registration),
+    )
 
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                contentDescription = null
-            )
-        }
-    }
-
-    Spacer(modifier = Modifier.height(40.dp))
+    Spacer(modifier = Modifier.height(Dimens.SpacerBetweenFields))
 
     Text(
         text = stringResource(Res.string.estimated_time),

@@ -2,25 +2,18 @@ package dev.fbvictorhugo.totemcore.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Mail
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -30,7 +23,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
@@ -38,19 +30,23 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import dev.fbvictorhugo.totemcore.ui.components.CommonForm
+import dev.fbvictorhugo.totemcore.ui.components.FormButtons
 import dev.fbvictorhugo.totemcore.ui.theme.AppTheme
+import dev.fbvictorhugo.totemcore.ui.theme.Dimens
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import totemcore.composeapp.generated.resources.Res
 import totemcore.composeapp.generated.resources.compose_multiplatform
+import totemcore.composeapp.generated.resources.field_email
+import totemcore.composeapp.generated.resources.field_name
+import totemcore.composeapp.generated.resources.field_neighborhood
+import totemcore.composeapp.generated.resources.field_phone
 import totemcore.composeapp.generated.resources.screen_registration_subtitle
 import totemcore.composeapp.generated.resources.screen_registration_title
 
@@ -68,7 +64,7 @@ fun RegistrationScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun RegistrationContent(modifier: Modifier = Modifier) {
+private fun RegistrationContent(modifier: Modifier = Modifier) {
     val focusManager = LocalFocusManager.current
     val firstFieldFocusRequester = remember { FocusRequester() }
 
@@ -85,7 +81,7 @@ fun RegistrationContent(modifier: Modifier = Modifier) {
 
     Column(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(Dimens.SpacerBetweenFields)
     ) {
         OutlinedTextField(
             value = name,
@@ -93,7 +89,7 @@ fun RegistrationContent(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .focusRequester(firstFieldFocusRequester),
-            label = { RequiredLabel("Nome") },
+            label = { RequiredLabel(stringResource(Res.string.field_name)) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Person,
@@ -112,7 +108,7 @@ fun RegistrationContent(modifier: Modifier = Modifier) {
             value = phone,
             onValueChange = { phone = it },
             modifier = Modifier.fillMaxWidth(),
-            label = { RequiredLabel("Telefone") },
+            label = { RequiredLabel(stringResource(Res.string.field_phone)) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Phone,
@@ -131,7 +127,7 @@ fun RegistrationContent(modifier: Modifier = Modifier) {
             value = neighborhood,
             onValueChange = { neighborhood = it },
             modifier = Modifier.fillMaxWidth(),
-            label = { Text("Bairro") },
+            label = { Text(stringResource(Res.string.field_neighborhood)) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.LocationOn,
@@ -150,7 +146,7 @@ fun RegistrationContent(modifier: Modifier = Modifier) {
             value = email,
             onValueChange = { email = it },
             modifier = Modifier.fillMaxWidth(),
-            label = { Text("E-mail") },
+            label = { Text(stringResource(Res.string.field_email)) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Mail,
@@ -165,65 +161,18 @@ fun RegistrationContent(modifier: Modifier = Modifier) {
             singleLine = true
         )
 
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(Dimens.SpacerBetweenComponentes))
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            OutlinedButton(
-                modifier = Modifier
-                    .height(60.dp)
-                    .weight(1f),
-                onClick = {},
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = null
-                    )
-                    Text("Voltar")
-                }
-            }
-
-            Button(
-                modifier = Modifier
-                    .height(60.dp)
-                    .weight(1f),
-                onClick = {},
-                enabled = isFormValid,
-                shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.secondary
-                ),
-                elevation = ButtonDefaults.buttonElevation(defaultElevation = 2.dp)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Text(
-                        text = "Próximo",
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            fontWeight = FontWeight.Bold
-                        )
-                    )
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                        contentDescription = null
-                    )
-                }
-            }
-        }
+        FormButtons(
+            nextEnabled = isFormValid,
+            onBackClick = { /* TODO */ },
+            onNextClick = { /* TODO */ },
+        )
     }
 }
 
 @Composable
-fun RequiredLabel(text: String) {
+private fun RequiredLabel(text: String) {
     Text(buildAnnotatedString {
         append(text)
         withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.error)) {

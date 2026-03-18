@@ -16,41 +16,39 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.fbvictorhugo.totemcore.ui.components.CommonForm
+import dev.fbvictorhugo.totemcore.ui.components.FormButtons
 import dev.fbvictorhugo.totemcore.ui.theme.AppTheme
+import dev.fbvictorhugo.totemcore.ui.theme.Dimens
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import totemcore.composeapp.generated.resources.Res
 import totemcore.composeapp.generated.resources.compose_multiplatform
 import totemcore.composeapp.generated.resources.screen_interests_subtitle
 import totemcore.composeapp.generated.resources.screen_interests_title
+import totemcore.composeapp.generated.resources.selected
+import totemcore.composeapp.generated.resources.selected_s
 
 val interestsList = listOf(
     "Roupas (Adulto)", "Roupas Infantis", "Calçados",
-    "Fraldas", "Cesta Básica", "Colchão", "Sofá", "Geladeira", "Fogão",
-    "Móveis em Geral", "Eletrodomésticos", "Produtos de Higiene",
+    // "Fraldas", "Cesta Básica", "Colchão", "Sofá", "Geladeira", "Fogão",
+    // "Móveis em Geral", "Eletrodomésticos", "Produtos de Higiene",
     "Água Potável", "Produtos de Limpeza", "Cobertores", "Material de Construção"
 )
 
@@ -67,9 +65,8 @@ fun InterestsScreen(modifier: Modifier = Modifier) {
     }
 }
 
-
 @Composable
-fun InterestsContent(interestsList: List<String>) {
+private fun InterestsContent(interestsList: List<String>) {
 
     val selectedInterests = remember { mutableStateListOf<String>() }
     BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
@@ -77,21 +74,19 @@ fun InterestsContent(interestsList: List<String>) {
 
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(Dimens.SpacerBetweenFields)
         ) {
 
             interestsList.chunked(columns).forEach { rowItems ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(Dimens.SpacerBetweenFields)
                 ) {
                     rowItems.forEach { interest ->
                         val isSelected = selectedInterests.contains(interest)
 
                         FilterChip(
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(64.dp),
+                            modifier = Modifier.weight(1f).height(Dimens.Button.Height),
                             selected = isSelected,
                             onClick = {
                                 if (isSelected) selectedInterests.remove(interest)
@@ -144,9 +139,13 @@ fun InterestsContent(interestsList: List<String>) {
 
             SelectedStatus(selectedInterests)
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(Dimens.SpacerBetweenComponentes))
 
-            FormButtons(selectedInterests.isNotEmpty())
+            FormButtons(
+                nextEnabled = selectedInterests.isNotEmpty(),
+                onBackClick = { /* TODO */ },
+                onNextClick = { /* TODO */ }
+            )
         }
     }
 }
@@ -161,66 +160,22 @@ private fun SelectedStatus(selectedInterests: SnapshotStateList<String>) {
 
         Surface(
             color = MaterialTheme.colorScheme.primaryContainer,
-            shape = RoundedCornerShape(16.dp),
+            shape = RoundedCornerShape(Dimens.MessageSurface.Radius),
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = "${selectedInterests.size} ${if (selectedInterests.size == 1) "Selecionado" else "Selecionados"}",
-                modifier = Modifier.padding(12.dp),
+                text = "${selectedInterests.size} ${
+                    if (selectedInterests.size == 1) stringResource(
+                        Res.string.selected
+                    ) else stringResource(Res.string.selected_s)
+                }",
+                modifier = Modifier.padding(Dimens.MessageSurface.Padding),
                 style = MaterialTheme.typography.titleMedium.copy(
                     color = MaterialTheme.colorScheme.primary
                 ),
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             )
-        }
-    }
-}
-
-@Composable
-private fun FormButtons(isFormValid: Boolean) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        OutlinedButton(
-            modifier = Modifier.height(60.dp).weight(1f),
-            onClick = {/* TODO */ },
-            shape = RoundedCornerShape(12.dp)
-        ) {
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
-                Text("Voltar")
-            }
-        }
-
-        Button(
-            modifier = Modifier.height(60.dp).weight(1f),
-            onClick = { /* TODO */ },
-            enabled = isFormValid,
-            shape = RoundedCornerShape(12.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
-            elevation = ButtonDefaults.buttonElevation(defaultElevation = 2.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Text(
-                    text = "Próximo",
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold
-                    )
-                )
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                    contentDescription = null
-                )
-            }
         }
     }
 }

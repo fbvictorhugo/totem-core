@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import dev.fbvictorhugo.totemcore.ui.screens.HomeScreen
+import dev.fbvictorhugo.totemcore.ui.screens.InterestsScreen
+import dev.fbvictorhugo.totemcore.ui.screens.RegistrationScreen
 import dev.fbvictorhugo.totemcore.ui.theme.AppTheme
 
 @Composable
