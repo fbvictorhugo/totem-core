@@ -8,4 +8,7 @@
     <string name="screen_registration_title">Dados Pessoais</string>
     <string name="screen_registration_subtitle">Preencha suas informações básicas</string>
 
+    <string name="screen_interests_title">Interesses</string>
+    <string name="screen_interests_subtitle">Selecione os itens que você tem interesse (pode selecionar múltiplos)</string>
+
 </resources>
