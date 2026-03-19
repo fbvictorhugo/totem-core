@@ -22,6 +22,8 @@
     <string name="field_phone">Telefone</string>
     <string name="field_neighborhood">Bairro</string>
     <string name="field_email">E-mail</string>
+    <string name="field_observations">Observações Adicionais (Opcional)</string>
+    <string name="field_observations_hint">Adicione qualquer informação extra que considere relevante...</string>
 
     <string name="screen_review_title">Revisão dos Dados</string>
     <string name="screen_review_subtitle">Confira as informações antes de finalizar</string>
