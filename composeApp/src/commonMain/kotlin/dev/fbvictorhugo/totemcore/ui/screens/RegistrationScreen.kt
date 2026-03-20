@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -39,10 +40,8 @@ import dev.fbvictorhugo.totemcore.ui.components.CommonForm
 import dev.fbvictorhugo.totemcore.ui.components.FormButtons
 import dev.fbvictorhugo.totemcore.ui.theme.AppTheme
 import dev.fbvictorhugo.totemcore.ui.theme.Dimens
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import totemcore.composeapp.generated.resources.Res
-import totemcore.composeapp.generated.resources.compose_multiplatform
 import totemcore.composeapp.generated.resources.field_email
 import totemcore.composeapp.generated.resources.field_name
 import totemcore.composeapp.generated.resources.field_neighborhood
@@ -56,7 +55,7 @@ fun RegistrationScreen(modifier: Modifier = Modifier) {
         modifier = modifier,
         title = stringResource(Res.string.screen_registration_title),
         subtitle = stringResource(Res.string.screen_registration_subtitle),
-        icon = painterResource(Res.drawable.compose_multiplatform),
+        icon = rememberVectorPainter(image = Icons.Default.Person),
         stepPage = 0.3f
     ) {
         RegistrationContent()

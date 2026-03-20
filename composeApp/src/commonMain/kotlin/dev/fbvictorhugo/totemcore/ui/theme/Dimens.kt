@@ -22,7 +22,7 @@ object Dimens {
 
     object MessageSurface {
         val Radius = RadiusSmall
-        val Padding = SpacingLarge
+        val Padding = SpacingMedium
     }
 
     object Button {
