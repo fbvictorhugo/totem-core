@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Adjust
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
@@ -28,6 +29,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,10 +38,8 @@ import dev.fbvictorhugo.totemcore.ui.components.CommonForm
 import dev.fbvictorhugo.totemcore.ui.components.FormButtons
 import dev.fbvictorhugo.totemcore.ui.theme.AppTheme
 import dev.fbvictorhugo.totemcore.ui.theme.Dimens
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import totemcore.composeapp.generated.resources.Res
-import totemcore.composeapp.generated.resources.compose_multiplatform
 import totemcore.composeapp.generated.resources.screen_interests_subtitle
 import totemcore.composeapp.generated.resources.screen_interests_title
 import totemcore.composeapp.generated.resources.selected
@@ -58,7 +58,7 @@ fun InterestsScreen(modifier: Modifier = Modifier) {
         modifier = modifier,
         title = stringResource(Res.string.screen_interests_title),
         subtitle = stringResource(Res.string.screen_interests_subtitle),
-        icon = painterResource(Res.drawable.compose_multiplatform),
+        icon = rememberVectorPainter(image = Icons.Default.Adjust),
         stepPage = 0.6f
     ) {
         InterestsContent(interestsList)
@@ -111,7 +111,7 @@ private fun InterestsContent(interestsList: List<String>) {
                                     )
                                 }
                             } else null,
-                            shape = RoundedCornerShape(12.dp),
+                            shape = RoundedCornerShape(Dimens.Button.Corner),
                             colors = FilterChipDefaults.filterChipColors(
                                 selectedContainerColor = MaterialTheme.colorScheme.primaryContainer.copy(
                                     alpha = 0.4f

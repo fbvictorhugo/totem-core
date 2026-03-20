@@ -1,4 +1,4 @@
-# TotemCore
+# TotemCore  ![ic_launcher](composeApp/src/androidMain/res/mipmap-mdpi/ic_launcher_round.webp)
 > Software de coleta de dados via totens digitais, configurável e multiplataforma.
 
 ![Status](https://img.shields.io/badge/status-in%20development-yellow)

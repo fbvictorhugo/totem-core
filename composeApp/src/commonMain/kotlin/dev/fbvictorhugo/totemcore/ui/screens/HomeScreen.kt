@@ -23,8 +23,8 @@ import org.jetbrains.compose.resources.stringResource
 import totemcore.composeapp.generated.resources.Res
 import totemcore.composeapp.generated.resources.app_name
 import totemcore.composeapp.generated.resources.app_subtitle
-import totemcore.composeapp.generated.resources.compose_multiplatform
 import totemcore.composeapp.generated.resources.estimated_time
+import totemcore.composeapp.generated.resources.icon_totem
 import totemcore.composeapp.generated.resources.start_registration
 import totemcore.composeapp.generated.resources.welcome_message
 
@@ -34,7 +34,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         modifier = modifier,
         title = stringResource(Res.string.app_name),
         subtitle = stringResource(Res.string.app_subtitle),
-        icon = painterResource(Res.drawable.compose_multiplatform)
+        icon = painterResource(Res.drawable.icon_totem)
     ) {
         HomeContent()
     }
