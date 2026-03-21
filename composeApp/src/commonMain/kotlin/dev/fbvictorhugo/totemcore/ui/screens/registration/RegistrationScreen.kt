@@ -1,4 +1,4 @@
-package dev.fbvictorhugo.totemcore.ui.screens
+package dev.fbvictorhugo.totemcore.ui.screens.registration
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,10 +19,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
@@ -36,6 +35,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.fbvictorhugo.totemcore.ui.components.CommonForm
 import dev.fbvictorhugo.totemcore.ui.components.FormButtons
 import dev.fbvictorhugo.totemcore.ui.theme.AppTheme
@@ -50,7 +50,12 @@ import totemcore.composeapp.generated.resources.screen_registration_subtitle
 import totemcore.composeapp.generated.resources.screen_registration_title
 
 @Composable
-fun RegistrationScreen(modifier: Modifier = Modifier) {
+fun RegistrationScreen(
+    modifier: Modifier = Modifier,
+    registrationViewModel: RegistrationViewModel = viewModel { RegistrationViewModel() }
+) {
+    val registrationUiState by registrationViewModel.uiState.collectAsState()
+
     CommonForm(
         modifier = modifier,
         title = stringResource(Res.string.screen_registration_title),
@@ -58,21 +63,21 @@ fun RegistrationScreen(modifier: Modifier = Modifier) {
         icon = rememberVectorPainter(image = Icons.Default.Person),
         stepPage = 0.3f
     ) {
-        RegistrationContent()
+        RegistrationContent(
+            uiState = registrationUiState,
+            onEvent = { registrationViewModel.onEvent(it) }
+        )
     }
 }
 
 @Composable
-private fun RegistrationContent(modifier: Modifier = Modifier) {
+private fun RegistrationContent(
+    modifier: Modifier = Modifier,
+    uiState: RegistrationUiState,
+    onEvent: (RegistrationEvent) -> Unit
+) {
     val focusManager = LocalFocusManager.current
     val firstFieldFocusRequester = remember { FocusRequester() }
-
-    var name by remember { mutableStateOf("") }
-    var phone by remember { mutableStateOf("") }
-    var neighborhood by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-
-    val isFormValid = name.isNotBlank() && phone.isNotBlank()
 
     LaunchedEffect(Unit) {
         firstFieldFocusRequester.requestFocus()
@@ -83,18 +88,13 @@ private fun RegistrationContent(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.spacedBy(Dimens.SpacerBetweenFields)
     ) {
         OutlinedTextField(
-            value = name,
-            onValueChange = { name = it },
+            value = uiState.name,
+            onValueChange = { onEvent(RegistrationEvent.NameChanged(it)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .focusRequester(firstFieldFocusRequester),
             label = { RequiredLabel(stringResource(Res.string.field_name)) },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Person,
-                    contentDescription = null
-                )
-            },
+            leadingIcon = { Icon(Icons.Default.Person, null) },
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.Words,
                 imeAction = ImeAction.Next
@@ -104,16 +104,11 @@ private fun RegistrationContent(modifier: Modifier = Modifier) {
         )
 
         OutlinedTextField(
-            value = phone,
-            onValueChange = { phone = it },
+            value = uiState.phone,
+            onValueChange = { onEvent(RegistrationEvent.PhoneChanged(it)) },
             modifier = Modifier.fillMaxWidth(),
             label = { RequiredLabel(stringResource(Res.string.field_phone)) },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Phone,
-                    contentDescription = null
-                )
-            },
+            leadingIcon = { Icon(Icons.Default.Phone, null) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Phone,
                 imeAction = ImeAction.Next
@@ -123,16 +118,11 @@ private fun RegistrationContent(modifier: Modifier = Modifier) {
         )
 
         OutlinedTextField(
-            value = neighborhood,
-            onValueChange = { neighborhood = it },
+            value = uiState.neighborhood,
+            onValueChange = { onEvent(RegistrationEvent.NeighborhoodChanged(it)) },
             modifier = Modifier.fillMaxWidth(),
             label = { Text(stringResource(Res.string.field_neighborhood)) },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.LocationOn,
-                    contentDescription = null
-                )
-            },
+            leadingIcon = { Icon(Icons.Default.LocationOn, null) },
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.Words,
                 imeAction = ImeAction.Next
@@ -142,16 +132,11 @@ private fun RegistrationContent(modifier: Modifier = Modifier) {
         )
 
         OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
+            value = uiState.email,
+            onValueChange = { onEvent(RegistrationEvent.EmailChanged(it)) },
             modifier = Modifier.fillMaxWidth(),
             label = { Text(stringResource(Res.string.field_email)) },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Mail,
-                    contentDescription = null
-                )
-            },
+            leadingIcon = { Icon(Icons.Default.Mail, null) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Done
@@ -163,9 +148,9 @@ private fun RegistrationContent(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(Dimens.SpacerBetweenComponentes))
 
         FormButtons(
-            nextEnabled = isFormValid,
-            onBackClick = { /* TODO */ },
-            onNextClick = { /* TODO */ },
+            nextEnabled = uiState.isFormValid,
+            onBackClick = { onEvent(RegistrationEvent.BackClicked) },
+            onNextClick = { onEvent(RegistrationEvent.NextClicked) },
         )
     }
 }
@@ -185,7 +170,10 @@ private fun RequiredLabel(text: String) {
 fun RegistrationScreenPreview() {
     AppTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
-            RegistrationScreen()
+            RegistrationContent(
+                uiState = RegistrationUiState(name = "John Doe"),
+                onEvent = {}
+            )
         }
     }
 }
