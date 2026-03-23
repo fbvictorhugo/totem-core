@@ -1,4 +1,4 @@
-package dev.fbvictorhugo.totemcore.ui.screens
+package dev.fbvictorhugo.totemcore.ui.screens.home
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.fbvictorhugo.totemcore.ui.components.CommonForm
 import dev.fbvictorhugo.totemcore.ui.components.FormButtons
 import dev.fbvictorhugo.totemcore.ui.theme.AppTheme
@@ -29,19 +30,22 @@ import totemcore.composeapp.generated.resources.start_registration
 import totemcore.composeapp.generated.resources.welcome_message
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    homeViewModel: HomeViewModel = viewModel { HomeViewModel() }
+) {
     CommonForm(
         modifier = modifier,
         title = stringResource(Res.string.app_name),
         subtitle = stringResource(Res.string.app_subtitle),
         icon = painterResource(Res.drawable.icon_totem)
     ) {
-        HomeContent()
+        HomeContent(onEvent = homeViewModel::onEvent)
     }
 }
 
 @Composable
-private fun HomeContent() {
+private fun HomeContent(onEvent: (HomeEvent) -> Unit) {
     Surface(
         color = MaterialTheme.colorScheme.primaryContainer,
         shape = RoundedCornerShape(Dimens.MessageSurface.Radius),
@@ -63,7 +67,7 @@ private fun HomeContent() {
     FormButtons(
         nextEnabled = true,
         onBackClick = null,
-        onNextClick = { /* TODO */ },
+        onNextClick = { onEvent(HomeEvent.StartRegistrationClicked) },
         nextText = stringResource(Res.string.start_registration),
     )
 
