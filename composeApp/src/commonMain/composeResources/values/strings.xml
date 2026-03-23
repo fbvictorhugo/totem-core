@@ -11,8 +11,8 @@
     <string name="screen_interests_title">Interesses</string>
     <string name="screen_interests_subtitle">Selecione os itens que você tem interesse (pode selecionar múltiplos)</string>
 
-    <string name="selected">Selecionado</string>
-    <string name="selected_s">Selecionados</string>
+    <string name="selected_singular">Selecionado</string>
+    <string name="selected_plural">Selecionados</string>
     
     <string name="button_back">Voltar</string>
     <string name="button_forward">Avançar</string>
