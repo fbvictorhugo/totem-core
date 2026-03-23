@@ -1,4 +1,4 @@
-package dev.fbvictorhugo.totemcore.ui.screens
+package dev.fbvictorhugo.totemcore.ui.screens.review
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -28,10 +28,8 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,6 +38,8 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import dev.fbvictorhugo.totemcore.model.PersonalData
 import dev.fbvictorhugo.totemcore.ui.components.CommonForm
 import dev.fbvictorhugo.totemcore.ui.components.FormButtons
 import dev.fbvictorhugo.totemcore.ui.theme.AppTheme
@@ -54,24 +54,17 @@ import totemcore.composeapp.generated.resources.field_observations
 import totemcore.composeapp.generated.resources.field_observations_hint
 import totemcore.composeapp.generated.resources.field_phone
 import totemcore.composeapp.generated.resources.screen_interests_title
+import totemcore.composeapp.generated.resources.screen_registration_title
 import totemcore.composeapp.generated.resources.screen_review_subtitle
 import totemcore.composeapp.generated.resources.screen_review_title
 
-val selectedList = listOf(
-    "Roupas (Adulto)", "Roupas Infantis", "Calçados",
-    "Fraldas", "Cesta Básica", "Colchão", "Sofá", "Geladeira", "Fogão",
-    "Móveis em Geral", "Eletrodomésticos", "Produtos de Higiene"
-)
-
-data class PersonalData(
-    val name: String = "Victor Hugo",
-    val phone: String = "99999-9999",
-    val neighborhood: String = "Bairro X",
-    val email: String = "victor@email.com"
-)
-
 @Composable
-fun ReviewScreen(modifier: Modifier = Modifier) {
+fun ReviewScreen(
+    modifier: Modifier = Modifier,
+    reviewViewModel: ReviewViewModel = viewModel { ReviewViewModel() }
+) {
+    val reviewUiState by reviewViewModel.uiState.collectAsState()
+
     CommonForm(
         modifier = modifier,
         title = stringResource(Res.string.screen_review_title),
@@ -79,30 +72,30 @@ fun ReviewScreen(modifier: Modifier = Modifier) {
         icon = rememberVectorPainter(image = Icons.Default.CheckCircle),
         stepPage = 0.9f
     ) {
-        ReviewContent(selectedList)
+        ReviewContent(
+            uiState = reviewUiState,
+            onEvent = { reviewViewModel.onEvent(it) })
     }
 }
 
 @Composable
-private fun ReviewContent(selectedList: List<String>) {
-
-    var observations by remember { mutableStateOf("") }
+private fun ReviewContent(
+    uiState: ReviewUiState,
+    onEvent: (ReviewEvent) -> Unit
+) {
 
     Column(verticalArrangement = Arrangement.spacedBy(Dimens.SpacerBetweenComponentes)) {
-
-        PersonalContent(PersonalData())
-
-        InterestContent(selectedList)
-
+        PersonalContent(uiState.personalData)
+        InterestContent(uiState.selectedInterests)
         ObservationsContent(
-            value = observations,
-            onValueChange = { observations = it }
+            value = uiState.observations,
+            onValueChange = { onEvent(ReviewEvent.ObservationsChanged(it)) }
         )
 
         FormButtons(
             nextEnabled = true,
-            onBackClick = { /* TODO */ },
-            onNextClick = { /* TODO */ },
+            onBackClick = { onEvent(ReviewEvent.BackClicked) },
+            onNextClick = { onEvent(ReviewEvent.NextClicked) },
             nextText = stringResource(Res.string.button_conclude),
             nextIcon = Icons.AutoMirrored.Filled.Send
         )
@@ -129,7 +122,7 @@ private fun PersonalContent(data: PersonalData) {
                 )
                 Spacer(modifier = Modifier.width(Dimens.SpacerBetweenFields))
                 Text(
-                    text = "Dados Pessoais",
+                    text = stringResource(Res.string.screen_registration_title),
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onSurface
                 )
@@ -175,7 +168,7 @@ private fun PersonalContent(data: PersonalData) {
 }
 
 @Composable
-private fun InterestContent(selectedList: List<String>) {
+private fun InterestContent(selectedInterests: List<String>) {
     Surface(
         shape = RoundedCornerShape(Dimens.MessageSurface.Radius),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
@@ -206,7 +199,7 @@ private fun InterestContent(selectedList: List<String>) {
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                selectedList.forEach { interest ->
+                selectedInterests.forEach { interest ->
                     Surface(
                         //  color = MaterialTheme.colorScheme.primaryContainer,
                         shape = RoundedCornerShape(Dimens.Button.Corner),
