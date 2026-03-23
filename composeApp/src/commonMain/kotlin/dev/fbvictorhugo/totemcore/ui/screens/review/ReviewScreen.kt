@@ -61,7 +61,9 @@ import totemcore.composeapp.generated.resources.screen_review_title
 @Composable
 fun ReviewScreen(
     modifier: Modifier = Modifier,
-    reviewViewModel: ReviewViewModel = viewModel { ReviewViewModel() }
+    reviewViewModel: ReviewViewModel = viewModel { ReviewViewModel() },
+    onNavigateBack: () -> Unit,
+    onFinalize: () -> Unit,
 ) {
     val reviewUiState by reviewViewModel.uiState.collectAsState()
 
@@ -74,7 +76,14 @@ fun ReviewScreen(
     ) {
         ReviewContent(
             uiState = reviewUiState,
-            onEvent = { reviewViewModel.onEvent(it) })
+            onEvent = { event ->
+                when (event) {
+                    ReviewEvent.NextClicked -> onFinalize()
+                    ReviewEvent.BackClicked -> onNavigateBack()
+                    else -> reviewViewModel.onEvent(event)
+                }
+            }
+        )
     }
 }
 
@@ -298,7 +307,10 @@ private fun ReviewField(
 fun ReviewScreenPreview() {
     AppTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
-            ReviewScreen()
+            ReviewScreen(
+                onNavigateBack = {},
+                onFinalize = {}
+            )
         }
     }
 }

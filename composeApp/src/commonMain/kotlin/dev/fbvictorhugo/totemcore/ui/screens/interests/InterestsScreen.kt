@@ -49,7 +49,9 @@ import totemcore.composeapp.generated.resources.selected_singular
 @Composable
 fun InterestsScreen(
     modifier: Modifier = Modifier,
-    interestsViewModel: InterestsViewModel = viewModel { InterestsViewModel() }
+    interestsViewModel: InterestsViewModel = viewModel { InterestsViewModel() },
+    onNavigateToReview: () -> Unit,
+    onNavigateBack: () -> Unit,
 ) {
     val interestsUiState by interestsViewModel.uiState.collectAsState()
 
@@ -62,7 +64,13 @@ fun InterestsScreen(
     ) {
         InterestsContent(
             uiState = interestsUiState,
-            onEvent = interestsViewModel::onEvent
+            onEvent = { event ->
+                when (event) {
+                    InterestsEvent.NextClicked -> onNavigateToReview()
+                    InterestsEvent.BackClicked -> onNavigateBack()
+                    else -> interestsViewModel.onEvent(event)
+                }
+            }
         )
 
     }
@@ -199,7 +207,10 @@ private fun SelectedStatus(uiState: InterestsUiState) {
 fun InterestsScreenPreview() {
     AppTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
-            InterestsScreen()
+            InterestsScreen(
+                onNavigateBack = {},
+                onNavigateToReview = {}
+            )
         }
     }
 }

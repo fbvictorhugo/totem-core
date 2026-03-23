@@ -52,7 +52,9 @@ import totemcore.composeapp.generated.resources.screen_registration_title
 @Composable
 fun RegistrationScreen(
     modifier: Modifier = Modifier,
-    registrationViewModel: RegistrationViewModel = viewModel { RegistrationViewModel() }
+    registrationViewModel: RegistrationViewModel = viewModel { RegistrationViewModel() },
+    onNavigateToInterests: () -> Unit,
+    onNavigateBack: () -> Unit,
 ) {
     val registrationUiState by registrationViewModel.uiState.collectAsState()
 
@@ -65,7 +67,13 @@ fun RegistrationScreen(
     ) {
         RegistrationContent(
             uiState = registrationUiState,
-            onEvent = { registrationViewModel.onEvent(it) }
+            onEvent = { event ->
+                when (event) {
+                    RegistrationEvent.NextClicked -> onNavigateToInterests()
+                    RegistrationEvent.BackClicked -> onNavigateBack()
+                    else -> registrationViewModel.onEvent(event)
+                }
+            }
         )
     }
 }

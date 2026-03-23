@@ -32,7 +32,8 @@ import totemcore.composeapp.generated.resources.welcome_message
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    homeViewModel: HomeViewModel = viewModel { HomeViewModel() }
+    homeViewModel: HomeViewModel = viewModel { HomeViewModel() },
+    onNavigateToRegistration: () -> Unit
 ) {
     CommonForm(
         modifier = modifier,
@@ -40,7 +41,12 @@ fun HomeScreen(
         subtitle = stringResource(Res.string.app_subtitle),
         icon = painterResource(Res.drawable.icon_totem)
     ) {
-        HomeContent(onEvent = homeViewModel::onEvent)
+        HomeContent(onEvent = { event ->
+            if (event is HomeEvent.StartRegistrationClicked) {
+                onNavigateToRegistration()
+            }
+            homeViewModel.onEvent(event)
+        })
     }
 }
 
@@ -87,7 +93,7 @@ private fun HomeContent(onEvent: (HomeEvent) -> Unit) {
 fun HomeScreenPreview() {
     AppTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
-            HomeScreen()
+            HomeScreen(onNavigateToRegistration = { })
         }
     }
 }
