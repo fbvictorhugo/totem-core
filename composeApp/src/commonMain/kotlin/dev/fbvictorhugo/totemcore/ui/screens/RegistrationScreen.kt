@@ -1,4 +1,4 @@
-package dev.fbvictorhugo.totemcore.ui.screens.registration
+package dev.fbvictorhugo.totemcore.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -35,11 +35,13 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.fbvictorhugo.totemcore.ui.components.CommonForm
 import dev.fbvictorhugo.totemcore.ui.components.FormButtons
 import dev.fbvictorhugo.totemcore.ui.theme.AppTheme
 import dev.fbvictorhugo.totemcore.ui.theme.Dimens
+import dev.fbvictorhugo.totemcore.viewmodel.SharedRegistrationEvent
+import dev.fbvictorhugo.totemcore.viewmodel.SharedRegistrationUiState
+import dev.fbvictorhugo.totemcore.viewmodel.SharedRegistrationViewModel
 import org.jetbrains.compose.resources.stringResource
 import totemcore.composeapp.generated.resources.Res
 import totemcore.composeapp.generated.resources.field_email
@@ -52,11 +54,11 @@ import totemcore.composeapp.generated.resources.screen_registration_title
 @Composable
 fun RegistrationScreen(
     modifier: Modifier = Modifier,
-    registrationViewModel: RegistrationViewModel = viewModel { RegistrationViewModel() },
+    sharedViewModel: SharedRegistrationViewModel,
     onNavigateToInterests: () -> Unit,
     onNavigateBack: () -> Unit,
 ) {
-    val registrationUiState by registrationViewModel.uiState.collectAsState()
+    val uiState by sharedViewModel.uiState.collectAsState()
 
     CommonForm(
         modifier = modifier,
@@ -66,12 +68,12 @@ fun RegistrationScreen(
         stepPage = 0.3f
     ) {
         RegistrationContent(
-            uiState = registrationUiState,
+            uiState = uiState,
             onEvent = { event ->
                 when (event) {
-                    RegistrationEvent.NextClicked -> onNavigateToInterests()
-                    RegistrationEvent.BackClicked -> onNavigateBack()
-                    else -> registrationViewModel.onEvent(event)
+                    SharedRegistrationEvent.NextClicked -> onNavigateToInterests()
+                    SharedRegistrationEvent.BackClicked -> onNavigateBack()
+                    else -> sharedViewModel.onEvent(event)
                 }
             }
         )
@@ -81,8 +83,8 @@ fun RegistrationScreen(
 @Composable
 private fun RegistrationContent(
     modifier: Modifier = Modifier,
-    uiState: RegistrationUiState,
-    onEvent: (RegistrationEvent) -> Unit
+    uiState: SharedRegistrationUiState,
+    onEvent: (SharedRegistrationEvent) -> Unit
 ) {
     val focusManager = LocalFocusManager.current
     val firstFieldFocusRequester = remember { FocusRequester() }
@@ -96,8 +98,8 @@ private fun RegistrationContent(
         verticalArrangement = Arrangement.spacedBy(Dimens.SpacerBetweenFields)
     ) {
         OutlinedTextField(
-            value = uiState.name,
-            onValueChange = { onEvent(RegistrationEvent.NameChanged(it)) },
+            value = uiState.personalData.name,
+            onValueChange = { onEvent(SharedRegistrationEvent.NameChanged(it)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .focusRequester(firstFieldFocusRequester),
@@ -112,8 +114,8 @@ private fun RegistrationContent(
         )
 
         OutlinedTextField(
-            value = uiState.phone,
-            onValueChange = { onEvent(RegistrationEvent.PhoneChanged(it)) },
+            value = uiState.personalData.phone,
+            onValueChange = { onEvent(SharedRegistrationEvent.PhoneChanged(it)) },
             modifier = Modifier.fillMaxWidth(),
             label = { RequiredLabel(stringResource(Res.string.field_phone)) },
             leadingIcon = { Icon(Icons.Default.Phone, null) },
@@ -126,8 +128,8 @@ private fun RegistrationContent(
         )
 
         OutlinedTextField(
-            value = uiState.neighborhood,
-            onValueChange = { onEvent(RegistrationEvent.NeighborhoodChanged(it)) },
+            value = uiState.personalData.neighborhood,
+            onValueChange = { onEvent(SharedRegistrationEvent.NeighborhoodChanged(it)) },
             modifier = Modifier.fillMaxWidth(),
             label = { Text(stringResource(Res.string.field_neighborhood)) },
             leadingIcon = { Icon(Icons.Default.LocationOn, null) },
@@ -140,8 +142,8 @@ private fun RegistrationContent(
         )
 
         OutlinedTextField(
-            value = uiState.email,
-            onValueChange = { onEvent(RegistrationEvent.EmailChanged(it)) },
+            value = uiState.personalData.email,
+            onValueChange = { onEvent(SharedRegistrationEvent.EmailChanged(it)) },
             modifier = Modifier.fillMaxWidth(),
             label = { Text(stringResource(Res.string.field_email)) },
             leadingIcon = { Icon(Icons.Default.Mail, null) },
@@ -156,9 +158,9 @@ private fun RegistrationContent(
         Spacer(modifier = Modifier.height(Dimens.SpacerBetweenComponentes))
 
         FormButtons(
-            nextEnabled = uiState.isFormValid,
-            onBackClick = { onEvent(RegistrationEvent.BackClicked) },
-            onNextClick = { onEvent(RegistrationEvent.NextClicked) },
+            nextEnabled = uiState.isRegistrationValid,
+            onBackClick = { onEvent(SharedRegistrationEvent.BackClicked) },
+            onNextClick = { onEvent(SharedRegistrationEvent.NextClicked) },
         )
     }
 }
@@ -178,9 +180,10 @@ private fun RequiredLabel(text: String) {
 fun RegistrationScreenPreview() {
     AppTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
-            RegistrationContent(
-                uiState = RegistrationUiState(name = "John Doe"),
-                onEvent = {}
+            RegistrationScreen(
+                sharedViewModel = SharedRegistrationViewModel(),
+                onNavigateBack = {},
+                onNavigateToInterests = {}
             )
         }
     }

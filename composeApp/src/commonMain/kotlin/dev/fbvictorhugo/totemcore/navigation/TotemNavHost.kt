@@ -1,15 +1,19 @@
 package dev.fbvictorhugo.totemcore.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import dev.fbvictorhugo.totemcore.ui.screens.home.HomeScreen
-import dev.fbvictorhugo.totemcore.ui.screens.interests.InterestsScreen
-import dev.fbvictorhugo.totemcore.ui.screens.registration.RegistrationScreen
-import dev.fbvictorhugo.totemcore.ui.screens.review.ReviewScreen
+import dev.fbvictorhugo.totemcore.ui.screens.HomeScreen
+import dev.fbvictorhugo.totemcore.ui.screens.InterestsScreen
+import dev.fbvictorhugo.totemcore.ui.screens.RegistrationScreen
+import dev.fbvictorhugo.totemcore.ui.screens.ReviewScreen
+import dev.fbvictorhugo.totemcore.viewmodel.SharedRegistrationViewModel
 
 @Composable
 fun TotemNavHost(
@@ -18,52 +22,72 @@ fun TotemNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screens.Home.name,
+        startDestination = Screens.Home,
         modifier = modifier
     ) {
-
-        composable(route = Screens.Home.name) {
+        composable<Screens.Home> {
             HomeScreen(
                 onNavigateToRegistration = {
-                    navController.navigate(Screens.Registration.name)
+                    navController.navigate(Screens.RegistrationWizard)
                 }
             )
         }
 
-        composable(route = Screens.Registration.name) {
-            RegistrationScreen(
-                onNavigateToInterests = {
-                    navController.navigate(Screens.Interests.name)
-                },
-                onNavigateBack = {
-                    navController.popBackStack()
-                }
-            )
-        }
+        navigation<Screens.RegistrationWizard>(
+            startDestination = Screens.Registration
+        ) {
+            composable<Screens.Registration> { backStackEntry ->
 
-        composable(route = Screens.Interests.name) {
-            InterestsScreen(
-                onNavigateToReview = {
-                    navController.navigate(Screens.Review.name)
-                },
-                onNavigateBack = {
-                    navController.popBackStack()
+                val parentEntry = remember(backStackEntry) {
+                    navController.getBackStackEntry<Screens.RegistrationWizard>()
                 }
-            )
-        }
-
-        composable(route = Screens.Review.name) {
-            ReviewScreen(
-                onNavigateBack = {
-                    navController.popBackStack()
-                },
-                onFinalize = {
-                    navController.navigate(Screens.Home.name) {
-                        popUpTo(Screens.Home.name) { inclusive = true }
+                val sharedViewModel: SharedRegistrationViewModel =
+                    viewModel(parentEntry) {
+                        SharedRegistrationViewModel()
                     }
-                }
-            )
-        }
 
+                RegistrationScreen(
+                    sharedViewModel = sharedViewModel,
+                    onNavigateToInterests = { navController.navigate(Screens.Interests) },
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+
+            composable<Screens.Interests> { backStackEntry ->
+
+                val parentEntry = remember(backStackEntry) {
+                    navController.getBackStackEntry<Screens.RegistrationWizard>()
+                }
+                val sharedViewModel: SharedRegistrationViewModel = viewModel(parentEntry) {
+                    SharedRegistrationViewModel()
+                }
+
+                InterestsScreen(
+                    sharedViewModel = sharedViewModel,
+                    onNavigateToReview = { navController.navigate(Screens.Review) },
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+
+            composable<Screens.Review> { backStackEntry ->
+
+                val parentEntry = remember(backStackEntry) {
+                    navController.getBackStackEntry<Screens.RegistrationWizard>()
+                }
+                val sharedViewModel: SharedRegistrationViewModel = viewModel(parentEntry) {
+                    SharedRegistrationViewModel()
+                }
+
+                ReviewScreen(
+                    sharedViewModel = sharedViewModel,
+                    onNavigateBack = { navController.popBackStack() },
+                    onFinalize = {
+                        navController.navigate(Screens.Home) {
+                            popUpTo(Screens.Home) { inclusive = true }
+                        }
+                    }
+                )
+            }
+        }
     }
 }

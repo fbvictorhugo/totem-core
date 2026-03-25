@@ -1,4 +1,4 @@
-package dev.fbvictorhugo.totemcore.ui.screens.home
+package dev.fbvictorhugo.totemcore.ui.screens
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +19,8 @@ import dev.fbvictorhugo.totemcore.ui.components.CommonForm
 import dev.fbvictorhugo.totemcore.ui.components.FormButtons
 import dev.fbvictorhugo.totemcore.ui.theme.AppTheme
 import dev.fbvictorhugo.totemcore.ui.theme.Dimens
+import dev.fbvictorhugo.totemcore.viewmodel.HomeEvent
+import dev.fbvictorhugo.totemcore.viewmodel.HomeViewModel
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import totemcore.composeapp.generated.resources.Res

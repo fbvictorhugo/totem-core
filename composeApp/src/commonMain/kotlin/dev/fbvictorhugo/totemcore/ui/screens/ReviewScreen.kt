@@ -1,4 +1,4 @@
-package dev.fbvictorhugo.totemcore.ui.screens.review
+package dev.fbvictorhugo.totemcore.ui.screens
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -38,12 +38,14 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.fbvictorhugo.totemcore.model.PersonalData
 import dev.fbvictorhugo.totemcore.ui.components.CommonForm
 import dev.fbvictorhugo.totemcore.ui.components.FormButtons
 import dev.fbvictorhugo.totemcore.ui.theme.AppTheme
 import dev.fbvictorhugo.totemcore.ui.theme.Dimens
+import dev.fbvictorhugo.totemcore.viewmodel.SharedRegistrationEvent
+import dev.fbvictorhugo.totemcore.viewmodel.SharedRegistrationUiState
+import dev.fbvictorhugo.totemcore.viewmodel.SharedRegistrationViewModel
 import org.jetbrains.compose.resources.stringResource
 import totemcore.composeapp.generated.resources.Res
 import totemcore.composeapp.generated.resources.button_conclude
@@ -61,11 +63,11 @@ import totemcore.composeapp.generated.resources.screen_review_title
 @Composable
 fun ReviewScreen(
     modifier: Modifier = Modifier,
-    reviewViewModel: ReviewViewModel = viewModel { ReviewViewModel() },
+    sharedViewModel: SharedRegistrationViewModel,
     onNavigateBack: () -> Unit,
     onFinalize: () -> Unit,
 ) {
-    val reviewUiState by reviewViewModel.uiState.collectAsState()
+    val uiState by sharedViewModel.uiState.collectAsState()
 
     CommonForm(
         modifier = modifier,
@@ -75,12 +77,12 @@ fun ReviewScreen(
         stepPage = 0.9f
     ) {
         ReviewContent(
-            uiState = reviewUiState,
+            uiState = uiState,
             onEvent = { event ->
                 when (event) {
-                    ReviewEvent.NextClicked -> onFinalize()
-                    ReviewEvent.BackClicked -> onNavigateBack()
-                    else -> reviewViewModel.onEvent(event)
+                    SharedRegistrationEvent.NextClicked -> onFinalize()
+                    SharedRegistrationEvent.BackClicked -> onNavigateBack()
+                    else -> sharedViewModel.onEvent(event)
                 }
             }
         )
@@ -89,8 +91,8 @@ fun ReviewScreen(
 
 @Composable
 private fun ReviewContent(
-    uiState: ReviewUiState,
-    onEvent: (ReviewEvent) -> Unit
+    uiState: SharedRegistrationUiState,
+    onEvent: (SharedRegistrationEvent) -> Unit
 ) {
 
     Column(verticalArrangement = Arrangement.spacedBy(Dimens.SpacerBetweenComponentes)) {
@@ -98,13 +100,13 @@ private fun ReviewContent(
         InterestContent(uiState.selectedInterests)
         ObservationsContent(
             value = uiState.observations,
-            onValueChange = { onEvent(ReviewEvent.ObservationsChanged(it)) }
+            onValueChange = { onEvent(SharedRegistrationEvent.ObservationsChanged(it)) }
         )
 
         FormButtons(
             nextEnabled = true,
-            onBackClick = { onEvent(ReviewEvent.BackClicked) },
-            onNextClick = { onEvent(ReviewEvent.NextClicked) },
+            onBackClick = { onEvent(SharedRegistrationEvent.BackClicked) },
+            onNextClick = { onEvent(SharedRegistrationEvent.NextClicked) },
             nextText = stringResource(Res.string.button_conclude),
             nextIcon = Icons.AutoMirrored.Filled.Send
         )
@@ -308,6 +310,7 @@ fun ReviewScreenPreview() {
     AppTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             ReviewScreen(
+                sharedViewModel = SharedRegistrationViewModel(),
                 onNavigateBack = {},
                 onFinalize = {}
             )

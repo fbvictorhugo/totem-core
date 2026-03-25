@@ -1,5 +1,8 @@
 package dev.fbvictorhugo.totemcore.ui.screens.interests
 
+import dev.fbvictorhugo.totemcore.viewmodel.SharedRegistrationEvent
+import dev.fbvictorhugo.totemcore.viewmodel.SharedRegistrationUiState
+import dev.fbvictorhugo.totemcore.viewmodel.SharedRegistrationViewModel
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -11,12 +14,12 @@ class InterestsViewModelTest {
     fun `when InterestClicked event is received, selectedInterests is updated`() {
 
         val customInterests = listOf("Kotlin", "Java", "Python")
-        val initialState = InterestsUiState(interests = customInterests)
-        val viewModel = InterestsViewModel(initialState = initialState)
+        val initialState = SharedRegistrationUiState(interests = customInterests)
+        val viewModel = SharedRegistrationViewModel(initialState = initialState)
 
         val interestToSelect = "Kotlin"
 
-        viewModel.onEvent(InterestsEvent.InterestClicked(interestToSelect))
+        viewModel.onEvent(SharedRegistrationEvent.InterestClicked(interestToSelect))
 
         assertTrue(viewModel.uiState.value.selectedInterests.contains(interestToSelect))
         assertTrue(viewModel.uiState.value.isInterestsSelected)
@@ -26,13 +29,13 @@ class InterestsViewModelTest {
     @Test
     fun `when an already selected interest is clicked, it should be removed`() {
         val interest = "Kotlin"
-        val initialState = InterestsUiState(
+        val initialState = SharedRegistrationUiState(
             interests = listOf(interest),
             selectedInterests = listOf(interest)
         )
-        val viewModel = InterestsViewModel(initialState = initialState)
+        val viewModel = SharedRegistrationViewModel(initialState = initialState)
 
-        viewModel.onEvent(InterestsEvent.InterestClicked(interest))
+        viewModel.onEvent(SharedRegistrationEvent.InterestClicked(interest))
 
         assertFalse(viewModel.uiState.value.selectedInterests.contains(interest))
         assertFalse(viewModel.uiState.value.isInterestsSelected)

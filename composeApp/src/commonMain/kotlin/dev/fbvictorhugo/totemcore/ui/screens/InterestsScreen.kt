@@ -1,4 +1,4 @@
-package dev.fbvictorhugo.totemcore.ui.screens.interests
+package dev.fbvictorhugo.totemcore.ui.screens
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -34,11 +34,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.fbvictorhugo.totemcore.ui.components.CommonForm
 import dev.fbvictorhugo.totemcore.ui.components.FormButtons
 import dev.fbvictorhugo.totemcore.ui.theme.AppTheme
 import dev.fbvictorhugo.totemcore.ui.theme.Dimens
+import dev.fbvictorhugo.totemcore.viewmodel.SharedRegistrationEvent
+import dev.fbvictorhugo.totemcore.viewmodel.SharedRegistrationUiState
+import dev.fbvictorhugo.totemcore.viewmodel.SharedRegistrationViewModel
 import org.jetbrains.compose.resources.stringResource
 import totemcore.composeapp.generated.resources.Res
 import totemcore.composeapp.generated.resources.screen_interests_subtitle
@@ -49,11 +51,11 @@ import totemcore.composeapp.generated.resources.selected_singular
 @Composable
 fun InterestsScreen(
     modifier: Modifier = Modifier,
-    interestsViewModel: InterestsViewModel = viewModel { InterestsViewModel() },
+    sharedViewModel: SharedRegistrationViewModel,
     onNavigateToReview: () -> Unit,
     onNavigateBack: () -> Unit,
 ) {
-    val interestsUiState by interestsViewModel.uiState.collectAsState()
+    val uiState by sharedViewModel.uiState.collectAsState()
 
     CommonForm(
         modifier = modifier,
@@ -63,12 +65,12 @@ fun InterestsScreen(
         stepPage = 0.6f
     ) {
         InterestsContent(
-            uiState = interestsUiState,
+            uiState = uiState,
             onEvent = { event ->
                 when (event) {
-                    InterestsEvent.NextClicked -> onNavigateToReview()
-                    InterestsEvent.BackClicked -> onNavigateBack()
-                    else -> interestsViewModel.onEvent(event)
+                    SharedRegistrationEvent.NextClicked -> onNavigateToReview()
+                    SharedRegistrationEvent.BackClicked -> onNavigateBack()
+                    else -> sharedViewModel.onEvent(event)
                 }
             }
         )
@@ -79,8 +81,8 @@ fun InterestsScreen(
 @Composable
 private fun InterestsContent(
     modifier: Modifier = Modifier,
-    uiState: InterestsUiState,
-    onEvent: (InterestsEvent) -> Unit
+    uiState: SharedRegistrationUiState,
+    onEvent: (SharedRegistrationEvent) -> Unit
 ) {
 
     BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
@@ -101,7 +103,7 @@ private fun InterestsContent(
 
                         InterestChipItem(
                             interest = interest, isSelected = isSelected,
-                            onClick = { onEvent(InterestsEvent.InterestClicked(interest)) }
+                            onClick = { onEvent(SharedRegistrationEvent.InterestClicked(interest)) }
                         )
                     }
 
@@ -119,8 +121,8 @@ private fun InterestsContent(
 
             FormButtons(
                 nextEnabled = uiState.isInterestsSelected,
-                onBackClick = { onEvent(InterestsEvent.BackClicked) },
-                onNextClick = { onEvent(InterestsEvent.NextClicked) }
+                onBackClick = { onEvent(SharedRegistrationEvent.BackClicked) },
+                onNextClick = { onEvent(SharedRegistrationEvent.NextClicked) }
             )
         }
     }
@@ -174,7 +176,7 @@ private fun RowScope.InterestChipItem(
 }
 
 @Composable
-private fun SelectedStatus(uiState: InterestsUiState) {
+private fun SelectedStatus(uiState: SharedRegistrationUiState) {
     AnimatedVisibility(
         visible = uiState.isInterestsSelected,
         enter = expandVertically() + fadeIn(),
@@ -208,6 +210,7 @@ fun InterestsScreenPreview() {
     AppTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             InterestsScreen(
+                sharedViewModel = SharedRegistrationViewModel(),
                 onNavigateBack = {},
                 onNavigateToReview = {}
             )

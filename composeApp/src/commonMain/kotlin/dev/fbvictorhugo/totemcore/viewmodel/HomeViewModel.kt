@@ -1,4 +1,4 @@
-package dev.fbvictorhugo.totemcore.ui.screens.home
+package dev.fbvictorhugo.totemcore.viewmodel
 
 import androidx.lifecycle.ViewModel
 
@@ -10,10 +10,7 @@ class HomeViewModel : ViewModel() {
 
     fun onEvent(event: HomeEvent) {
         when (event) {
-            HomeEvent.StartRegistrationClicked -> {
-                /* TODO */
-
-            }
+            HomeEvent.StartRegistrationClicked -> {}
         }
     }
 }
