@@ -16,9 +16,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Adb
-import androidx.compose.material.icons.filled.Adjust
-import androidx.compose.material.icons.filled.DynamicFeed
 import androidx.compose.material.icons.filled.DynamicForm
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -32,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -52,6 +50,7 @@ fun CommonForm(
     title: String,
     subtitle: String,
     icon: Painter,
+    boxIconColor: Color = MaterialTheme.colorScheme.primary,
     stepPage: Float = 0f,
     content: @Composable ColumnScope.() -> Unit
 ) {
@@ -85,7 +84,7 @@ fun CommonForm(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    FormHeader(icon, title, subtitle)
+                    FormHeader(icon, boxIconColor,title, subtitle)
 
                     if (stepPage > 0) {
 
@@ -115,6 +114,7 @@ fun CommonForm(
 @Composable
 private fun FormHeader(
     icon: Painter,
+    boxIconColor: Color,
     title: String,
     subtitle: String
 ) {
@@ -122,7 +122,7 @@ private fun FormHeader(
         modifier = Modifier
             .size(100.dp)
             .background(
-                color = MaterialTheme.colorScheme.primary,
+                color = boxIconColor,
                 shape = RoundedCornerShape(24.dp)
             ),
         contentAlignment = Alignment.Center

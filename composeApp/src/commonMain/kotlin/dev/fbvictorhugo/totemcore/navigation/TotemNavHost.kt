@@ -7,8 +7,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navigation
+import dev.fbvictorhugo.totemcore.ui.screens.ConclusionScreen
 import dev.fbvictorhugo.totemcore.ui.screens.HomeScreen
 import dev.fbvictorhugo.totemcore.ui.screens.InterestsScreen
 import dev.fbvictorhugo.totemcore.ui.screens.RegistrationScreen
@@ -81,13 +82,19 @@ fun TotemNavHost(
                 ReviewScreen(
                     sharedViewModel = sharedViewModel,
                     onNavigateBack = { navController.popBackStack() },
-                    onFinalize = {
-                        navController.navigate(Screens.Home) {
-                            popUpTo(Screens.Home) { inclusive = true }
-                        }
-                    }
+                    onFinalize = { navController.navigate(Screens.Conclusion) },
                 )
             }
+        }
+
+        composable<Screens.Conclusion> {
+            ConclusionScreen(
+                onConclude = {
+                    navController.navigate(Screens.Home) {
+                        popUpTo(Screens.Home) { inclusive = true }
+                    }
+                }
+            )
         }
     }
 }
