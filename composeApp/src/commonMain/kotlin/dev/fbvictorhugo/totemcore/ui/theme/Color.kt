@@ -2,13 +2,12 @@ package dev.fbvictorhugo.totemcore.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// --- LIGHT THEME (Vibrante e Limpo) ---
-val primaryLight = Color(0xFF1976D2)           // Azul Vibrante (do ícone)
+val primaryLight = Color(0xFF1976D2)
 val onPrimaryLight = Color(0xFFFFFFFF)
-val primaryContainerLight = Color(0xFFE3F2FD)  // Azul clarinho (do box de boas-vindas)
+val primaryContainerLight = Color(0xFFE3F2FD)
 val onPrimaryContainerLight = Color(0xFF001D36)
 
-val secondaryLight = Color(0xFFE91E63)          // Rosa Vibrante (do botão)
+val secondaryLight = Color(0xFFE91E63)
 val onSecondaryLight = Color(0xFFFFFFFF)
 val secondaryContainerLight = Color(0xFFFFD9E2)
 val onSecondaryContainerLight = Color(0xFF3E001D)
@@ -23,9 +22,9 @@ val onErrorLight = Color(0xFFFFFFFF)
 val errorContainerLight = Color(0xFFFFDAD6)
 val onErrorContainerLight = Color(0xFF410002)
 
-val backgroundLight = Color(0xFFFFFFFF)        // Branco puro para um visual limpo
+val backgroundLight = Color(0xFFFFFFFF)
 val onBackgroundLight = Color(0xFF1A1C1E)
-val surfaceLight = Color(0xFFFFFFFF)           // Branco puro para Cards
+val surfaceLight = Color(0xFFFFFFFF)
 val onSurfaceLight = Color(0xFF1A1C1E)
 
 val surfaceVariantLight = Color(0xFFE0E2EC)
@@ -44,7 +43,6 @@ val surfaceContainerLight = Color(0xFFF1F4FA)
 val surfaceContainerHighLight = Color(0xFFEBEFF4)
 val surfaceContainerHighestLight = Color(0xFFE5E9EE)
 
-// --- DARK THEME (Ajustado para legibilidade) ---
 val primaryDark = Color(0xFFA6C8FF)
 val onPrimaryDark = Color(0xFF00305F)
 val primaryContainerDark = Color(0xFF004785)
@@ -86,7 +84,6 @@ val surfaceContainerDark = Color(0xFF1D2024)
 val surfaceContainerHighDark = Color(0xFF282A2F)
 val surfaceContainerHighestDark = Color(0xFF32353A)
 
-// --- Contrast Variants (Simplificados para manter o foco) ---
 val primaryLightMediumContrast = Color(0xFF00447A)
 val onPrimaryLightMediumContrast = Color(0xFFFFFFFF)
 val primaryContainerLightMediumContrast = Color(0xFF3476B1)
